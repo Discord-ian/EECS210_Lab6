@@ -6,6 +6,7 @@
 
 struct temp_data {
     float temperature;
+    // (1: Celsius, 2: Fahrenheit, 3: Kelvin)
     int temp_scale;
     int conversion_temp;
 };
@@ -24,6 +25,8 @@ int main() {
     // Create the required variables we will need.
     // Call our user input function once
     struct temp_data data = get_user_input();
+    float celsius;
+    float converted_temp;
     // If the function got invalid data, it will return
     // temp_scale as 0. If so, we can keep calling it while printing out
     // a helpful error message.
@@ -31,10 +34,36 @@ int main() {
         printf(" please try again.\n");
         data = get_user_input();
     }
-    printf("Temp: %f\n", data.temperature);
-    printf("Scale: %i\n", data.temp_scale);
-    printf("Convert to: %i", data.conversion_temp);
-
+    // (1: Celsius, 2: Fahrenheit, 3: Kelvin)
+    // This ensures we know the temp in Celsius to use later in the program for
+    // categorize_temp()
+    if (data.temp_scale != 1) {
+        if (data.temp_scale == 2) {
+            celsius = fahrenheit_to_celsius(data.temperature);
+        } else if (data.temp_scale == 3) {
+            celsius = kelvin_to_celsius(data.temperature);
+        }
+    } else {
+        celsius = data.temperature;
+    }
+    // Converts the temperature to what was asked.
+    switch (data.conversion_temp) {
+        case 1:
+            printf("Converted Temperature: %.2f°C\n",celsius);
+            break;
+        case 2:
+            converted_temp = celsius_to_fahrenheit(celsius);
+            printf("Converted Temperature: %.2f°F\n", converted_temp);
+            break;
+        case 3:
+            converted_temp = celsius_to_kelvin(celsius);
+            printf("Converted Temperature: %.2fK\n", converted_temp);
+            break;
+        default:
+            printf("Error with conversion. Please try again.");
+            exit(-1);
+    }
+    categorize_temp(celsius);
 }
 
 struct temp_data get_user_input() {
@@ -84,7 +113,7 @@ float fahrenheit_to_celsius (float temp_in_f) {
 }
 
 float celsius_to_fahrenheit (float temp_in_c) {
-    return (temp_in_c+32.0)*(9.0/5);
+    return (temp_in_c)*(9.0/5) + 32;
 }
 
 float celsius_to_kelvin (float temp_in_c) {
@@ -103,16 +132,19 @@ void categorize_temp(float celsius) {
      * > 35, extreme heat
      */
     if (celsius < 0) {
-        printf("Temperature Category: Freezing");
+        printf("Temperature Category: Freezing\n");
         printf("Advisory: Limit time spent outside and ensure you are insulated from the cold.");
     } else if (celsius > 0 && celsius <= 10) {
-        printf("Temperature Category: Cold");
+        printf("Temperature Category: Cold\n");
         printf("Advisory: Make sure to wear a jacket while outside.");
     } else if (celsius > 10 && celsius <= 25) {
-        printf("Temperature Category: Comfortable");
+        printf("Temperature Category: Comfortable\n");
         printf("Advisory: It should be comfortable outdoors, enjoy it!");
     } else if (celsius > 25 && celsius <= 35) {
-        printf("Temperature Category: Extreme Heat");
+        printf("Temperature Category: Hot\n");
+        printf("Advisory: Wear thin layers and don't forget sunscreen and a hat!");
+    } else if (celsius > 35) {
+        printf("Temperature Category: Extreme Heat\n");
         printf("Advisory: Stay indoors. If you must go outside, limit time as much as possible.");
     }
 }
