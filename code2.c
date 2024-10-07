@@ -15,7 +15,7 @@ struct temp_data {
 struct temp_data get_user_input();
 float fahrenheit_to_celsius(float temp_in_f);
 float celsius_to_fahrenheit (float temp_in_c);
-float celsius_to_kelvin (float temp_in_k);
+float celsius_to_kelvin (float temp_in_c);
 float kelvin_to_celsius (float temp_in_k);
 void categorize_temp(float celsius);
 
